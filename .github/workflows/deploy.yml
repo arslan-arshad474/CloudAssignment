@@ -20,10 +20,10 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp ./app
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/cloudapp ./app
 
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/cloudapp
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v1.0.0
@@ -32,7 +32,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          sudo docker stop myapp || true
-          sudo docker rm myapp || true
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/myapp
-          sudo docker run -d -p 80:80 --name myapp ${{ secrets.DOCKER_USERNAME }}/myapp
+          sudo docker stop cloudapp || true
+          sudo docker rm cloudapp || true
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudapp
+          sudo docker run -d -p 80:80 --name cloudapp ${{ secrets.DOCKER_USERNAME }}/cloudapp
