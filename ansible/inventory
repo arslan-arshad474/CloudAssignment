@@ -1,0 +1,2 @@
+[servers]
+3.237.170.73 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/Assignment_Key.pem

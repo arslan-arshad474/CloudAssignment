@@ -1,0 +1,39 @@
+- name: Install and Configure Docker
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Docker and Python dependencies
+      apt:
+        name:
+          - docker.io
+          - python3-docker  # Fixes the PEP 668 "externally-managed-environment" error
+        state: present
+
+    - name: Ensure Docker service is started and enabled
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Test Docker by running Hello World
+      docker_container:
+        name: hello-world-test
+        image: hello-world
+        state: started
+        detach: false
+      register: docker_test
+
+    - name: Show Docker test output
+      debug:
+        msg: "Docker is working! {{ docker_test.container.Output }}"
